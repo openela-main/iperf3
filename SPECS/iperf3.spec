@@ -1,6 +1,6 @@
 Name:           iperf3
 Version:        3.5
-Release:        7%{?dist}
+Release:        10%{?dist}
 Summary:        Measurement tool for TCP/UDP bandwidth performance
 
 Group:          Applications/Internet
@@ -13,7 +13,9 @@ BuildRequires:  openssl-devel
 
 Patch0002:	0002-udp-counters-manpage.patch
 Patch0003:	0003-covscan-sctp.patch
-Patch0004:	0004-memory-crash.patch
+Patch0004:	0004-cve-2023-38403.patch
+Patch0005:	0005-cve-2023-7250.patch
+Patch0006:	0006-cve-2024-26306.patch
 
 %description
 Iperf is a tool to measure maximum TCP bandwidth, allowing the tuning of
@@ -61,8 +63,18 @@ rm -f %{buildroot}%{_libdir}/libiperf.la
 %{_libdir}/*.so
 
 %changelog
-* Wed Jul 26 2023 Michal Ruprich <mruprich@redhat.com> - 3.5-7
-- Resolves: #2224443 - memory allocation hazard and crash
+* Tue Jun 11 2024 Michal Ruprich <mruprich@redhat.com> - 3.5-10
+- Resolves: RHEL-29578 - vulnerable to marvin attack if the authentication option is used
+
+* Tue Jun 04 2024 Michal Ruprich <mruprich@redhat.com> - 3.5-9
+- Resolves: RHEL-17069 - possible denial of service
+
+* Fri Jul 28 2023 Michal Ruprich <mruprich@redhat.com> - 3.5-8
+- Related: #2222205 - bumping nvr for correct update path
+
+* Tue Jul 18 2023 Jonathan Wright <jonathan@almalinux.org> - 3.5-7
+- Fixes CVE-2023-38403
+  Resolves: rhbz#2223729
 
 * Tue May 05 2020 Michal Ruprich <michalruprich@gmail.com> - 3.5-6
 - Related: #1665142 - Fixing a couple of covscan issues
