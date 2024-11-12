@@ -1,19 +1,20 @@
 Name:           iperf3
 Version:        3.9
-Release:        10%{?dist}
+Release:        13%{?dist}
 Summary:        Measurement tool for TCP/UDP bandwidth performance
 
 License:        BSD
 URL:            https://github.com/esnet/iperf
 Source0:        https://github.com/esnet/iperf/archive/%{version}.tar.gz
+Patch0000:	0000-cve-2023-38403.patch
+Patch0001:	0001-cve-2023-7250.patch
+Patch0002:	0002-cve-2024-26306.patch
+
 BuildRequires:  libuuid-devel
 BuildRequires:  gcc
 BuildRequires:  lksctp-tools-devel
 BuildRequires:  openssl-devel
 BuildRequires:  make
-BuildRequires:  git-core
-
-Patch0000:  0000-memory-crash.patch
 
 %description
 Iperf is a tool to measure maximum TCP bandwidth, allowing the tuning of
@@ -29,7 +30,7 @@ The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
 %prep
-%autosetup -n iperf-%{version} -S git
+%autosetup -n iperf-%{version} -p1
 
 %build
 %configure --disable-static
@@ -55,8 +56,18 @@ rm -f %{buildroot}%{_libdir}/libiperf.la
 %{_libdir}/*.so
 
 %changelog
-* Wed Jul 26 2023 Michal Ruprich <mruprich@redhat.com> - 3.9-10
-- Resolves: #2224446 - memory allocation hazard and crash
+* Tue Jun 11 2024 Michal Ruprich <mruprich@redhat.com> - 3.9-13
+- Resolves: RHEL-29579 - vulnerable to marvin attack if the authentication option is used
+
+* Tue Jun 04 2024 Michal Ruprich <mruprich@redhat.com> - 3.9-12
+- Resolves: RHEL-39975 - possible denial of service
+
+* Wed Aug 09 2023 Michal Ruprich <mruprich@redhat.com> - 3.9-11
+- Related: #2223676 - bumping version for correct update path
+
+* Fri Jul 28 2023 Jonathan Wright <jonathan@almalinux.org> - 3.9-10
+- Fixes CVE-2023-38403
+  Resolves: rhbz#2223676
 
 * Mon Aug 09 2021 Mohan Boddu <mboddu@redhat.com> - 3.9-9
 - Rebuilt for IMA sigs, glibc 2.34, aarch64 flags
