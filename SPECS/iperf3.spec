@@ -1,6 +1,6 @@
 Name:           iperf3
 Version:        3.9
-Release:        13%{?dist}
+Release:        13%{?dist}.1
 Summary:        Measurement tool for TCP/UDP bandwidth performance
 
 License:        BSD
@@ -9,6 +9,7 @@ Source0:        https://github.com/esnet/iperf/archive/%{version}.tar.gz
 Patch0000:	0000-cve-2023-38403.patch
 Patch0001:	0001-cve-2023-7250.patch
 Patch0002:	0002-cve-2024-26306.patch
+Patch0003:	0003-cve-2024-53580.patch
 
 BuildRequires:  libuuid-devel
 BuildRequires:  gcc
@@ -56,6 +57,9 @@ rm -f %{buildroot}%{_libdir}/libiperf.la
 %{_libdir}/*.so
 
 %changelog
+* Tue Jan 07 2025 Michal Ruprich <mruprich@redhat.com> - 3.9-13.1
+- Resolves: RHEL-72929 - Denial of Service in iperf Due to Improper JSON Handling
+
 * Tue Jun 11 2024 Michal Ruprich <mruprich@redhat.com> - 3.9-13
 - Resolves: RHEL-29579 - vulnerable to marvin attack if the authentication option is used
 
