@@ -1,6 +1,6 @@
 Name:           iperf3
 Version:        3.5
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        Measurement tool for TCP/UDP bandwidth performance
 
 Group:          Applications/Internet
@@ -16,6 +16,7 @@ Patch0003:	0003-covscan-sctp.patch
 Patch0004:	0004-cve-2023-38403.patch
 Patch0005:	0005-cve-2023-7250.patch
 Patch0006:	0006-cve-2024-26306.patch
+Patch0007:	0007-cve-2024-53580.patch
 
 %description
 Iperf is a tool to measure maximum TCP bandwidth, allowing the tuning of
@@ -63,6 +64,9 @@ rm -f %{buildroot}%{_libdir}/libiperf.la
 %{_libdir}/*.so
 
 %changelog
+* Wed Jan 08 2025 Michal Ruprich <mruprich@redhat.com> - 3.5-11
+- Resolves: RHEL-72924 - Denial of Service in iperf Due to Improper JSON Handling
+
 * Tue Jun 11 2024 Michal Ruprich <mruprich@redhat.com> - 3.5-10
 - Resolves: RHEL-29578 - vulnerable to marvin attack if the authentication option is used
 
