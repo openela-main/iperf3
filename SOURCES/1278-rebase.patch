@@ -1,0 +1,84 @@
+diff -rNu iperf-3.16.orig/iperf-3.16/src/iperf_api.c iperf-3.16/src/iperf_api.c
+--- iperf-3.16.orig/iperf-3.16/src/iperf_api.c	2023-11-29 13:46:13.000000000 -0600
++++ iperf-3.16/src/iperf_api.c	2023-12-06 22:08:09.508869360 -0600
+@@ -3356,6 +3356,8 @@
+ 
+ 		    temp.rttvar = get_rttvar(&temp);
+ 		    temp.pmtu = get_pmtu(&temp);
++		    temp.reorder = get_reorder(&temp);
++		    rp->stream_reorder = temp.reorder;
+ 		}
+ 	    }
+ 	} else {
+@@ -3801,7 +3803,7 @@
+                     if (test->sender_has_retransmits) {
+                         /* Sender summary, TCP and SCTP with retransmits. */
+                         if (test->json_output)
+-                            cJSON_AddItemToObject(json_summary_stream, report_sender, iperf_json_printf("socket: %d  start: %f  end: %f  seconds: %f  bytes: %d  bits_per_second: %f  retransmits: %d  max_snd_cwnd:  %d  max_snd_wnd:  %d  max_rtt:  %d  min_rtt:  %d  mean_rtt:  %d sender: %b", (int64_t) sp->socket, (double) start_time, (double) sender_time, (double) sender_time, (int64_t) bytes_sent, bandwidth * 8, (int64_t) sp->result->stream_retrans, (int64_t) sp->result->stream_max_snd_cwnd, (int64_t) sp->result->stream_max_snd_wnd, (int64_t) sp->result->stream_max_rtt, (int64_t) sp->result->stream_min_rtt, (int64_t) ((sp->result->stream_count_rtt == 0) ? 0 : sp->result->stream_sum_rtt / sp->result->stream_count_rtt), stream_must_be_sender));
++                            cJSON_AddItemToObject(json_summary_stream, "sender", iperf_json_printf("socket: %d  start: %f  end: %f  seconds: %f  bytes: %d  bits_per_second: %f  retransmits: %d  reorder:  %d  max_snd_cwnd:  %d  max_snd_wnd:  %d  max_rtt:  %d  min_rtt:  %d  mean_rtt:  %d sender: %b", (int64_t) sp->socket, (double) start_time, (double) sender_time, (double) sender_time, (int64_t) bytes_sent, bandwidth * 8, (int64_t) sp->result->stream_retrans, (int64_t) sp->result->stream_reorder, (int64_t) sp->result->stream_max_snd_cwnd, (int64_t) sp->result->stream_max_snd_wnd, (int64_t) sp->result->stream_max_rtt, (int64_t) sp->result->stream_min_rtt, (int64_t) ((sp->result->stream_count_rtt == 0) ? 0 : sp->result->stream_sum_rtt / sp->result->stream_count_rtt), stream_must_be_sender));
+                         else
+                             if (test->role == 's' && !sp->sender) {
+                                 if (test->verbose)
+@@ -4252,7 +4254,7 @@
+ 	if (test->sender_has_retransmits == 1 && sp->sender) {
+ 	    /* Interval, TCP with retransmits. */
+ 	    if (test->json_output)
+-		cJSON_AddItemToArray(json_interval_streams, iperf_json_printf("socket: %d  start: %f  end: %f  seconds: %f  bytes: %d  bits_per_second: %f  retransmits: %d  snd_cwnd:  %d  snd_wnd:  %d  rtt:  %d  rttvar: %d  pmtu: %d  omitted: %b sender: %b", (int64_t) sp->socket, (double) st, (double) et, (double) irp->interval_duration, (int64_t) irp->bytes_transferred, bandwidth * 8, (int64_t) irp->interval_retrans, (int64_t) irp->snd_cwnd, (int64_t) irp->snd_wnd, (int64_t) irp->rtt, (int64_t) irp->rttvar, (int64_t) irp->pmtu, irp->omitted, sp->sender));
++		cJSON_AddItemToArray(json_interval_streams, iperf_json_printf("socket: %d  start: %f  end: %f  seconds: %f  bytes: %d  bits_per_second: %f  retransmits: %d  snd_cwnd:  %d  snd_wnd:  %d  rtt:  %d  rttvar: %d  pmtu: %d  reorder: %d  omitted: %b sender: %b", (int64_t) sp->socket, (double) st, (double) et, (double) irp->interval_duration, (int64_t) irp->bytes_transferred, bandwidth * 8, (int64_t) irp->interval_retrans, (int64_t) irp->snd_cwnd, (int64_t) irp->snd_wnd, (int64_t) irp->rtt, (int64_t) irp->rttvar, (int64_t) irp->pmtu, (int64_t) irp->reorder, irp->omitted, sp->sender));
+ 	    else {
+ 		unit_snprintf(cbuf, UNIT_LEN, irp->snd_cwnd, 'A');
+ 		iperf_printf(test, report_bw_retrans_cwnd_format, sp->socket, mbuf, st, et, ubuf, nbuf, irp->interval_retrans, cbuf, irp->omitted?report_omitted:"");
+diff -rNu iperf-3.16.orig/iperf-3.16/src/iperf_api.h iperf-3.16/src/iperf_api.h
+--- iperf-3.16.orig/iperf-3.16/src/iperf_api.h	2023-11-29 13:46:13.000000000 -0600
++++ iperf-3.16/src/iperf_api.h	2023-12-06 22:08:36.409418686 -0600
+@@ -316,6 +316,7 @@
+ long get_rtt(struct iperf_interval_results *irp);
+ long get_rttvar(struct iperf_interval_results *irp);
+ long get_pmtu(struct iperf_interval_results *irp);
++long get_reorder(struct iperf_interval_results *irp);
+ void print_tcpinfo(struct iperf_test *test);
+ void build_tcpinfo_message(struct iperf_interval_results *r, char *message);
+ 
+diff -rNu iperf-3.16.orig/iperf-3.16/src/iperf.h iperf-3.16/src/iperf.h
+--- iperf-3.16.orig/iperf-3.16/src/iperf.h	2023-11-29 13:46:13.000000000 -0600
++++ iperf-3.16/src/iperf.h	2023-12-06 22:06:35.332454109 -0600
+@@ -125,6 +125,7 @@
+     long rtt;
+     long rttvar;
+     long pmtu;
++    long reorder;
+ };
+ 
+ struct iperf_stream_result
+@@ -136,6 +137,7 @@
+     atomic_iperf_size_t bytes_sent_omit;
+     long stream_prev_total_retrans;
+     long stream_retrans;
++    long stream_reorder;
+     long stream_max_rtt;
+     long stream_min_rtt;
+     long stream_sum_rtt;
+diff -rNu iperf-3.16.orig/iperf-3.16/src/tcp_info.c iperf-3.16/src/tcp_info.c
+--- iperf-3.16.orig/iperf-3.16/src/tcp_info.c	2023-11-29 13:46:13.000000000 -0600
++++ iperf-3.16/src/tcp_info.c	2023-12-06 22:09:45.371252438 -0600
+@@ -218,6 +218,20 @@
+ }
+ 
+ /*************************************************************/
++/*
++ * Return number of reordering events seen.
++ */
++long
++get_reorder(struct iperf_interval_results *irp)
++{
++#if defined(linux) && defined(TCP_REPAIR_ON)
++    return irp->tcpInfo.tcpi_reord_seen;
++#else
++    return -1;
++#endif
++}
++
++/*************************************************************/
+ void
+ build_tcpinfo_message(struct iperf_interval_results *r, char *message)
+ {
