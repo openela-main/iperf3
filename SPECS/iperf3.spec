@@ -1,6 +1,6 @@
 Name:           iperf3
 Version:        3.17.1
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Measurement tool for TCP/UDP bandwidth performance
 
 License:        BSD-3-Clause-LBNL AND MIT AND dtoa AND BSD-3-Clause AND NCSA AND LicenseRef-Fedora-Public-Domain
@@ -16,6 +16,7 @@ BuildRequires:  git-core
 
 Patch0000:    1278-rebase.patch
 Patch0001:    0001-cve-2024-53580.patch
+Patch0002:    0002-cve-2025-54349.patch
 
 %description
 Iperf is a tool to measure maximum TCP bandwidth, allowing the tuning of
@@ -57,6 +58,9 @@ rm -f %{buildroot}%{_libdir}/libiperf.la
 %{_libdir}/*.so
 
 %changelog
+* Tue Jan 20 2026 Michal Ruprich <mruprich@redhat.com> - 3.17.1-5
+- Resolves: RHEL-136170 - iperf Heap Buffer Overflow (CVE-2025-54349)
+
 * Thu Jan 09 2025 Michal Ruprich <mruprich@redhat.com> - 3.17.1-4
 - Resolves: RHEL-71809 - Denial of Service in iperf Due to Improper JSON Handling
 
