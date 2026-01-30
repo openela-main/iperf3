@@ -1,6 +1,6 @@
 Name:           iperf3
 Version:        3.9
-Release:        14%{?dist}
+Release:        14%{?dist}.1
 Summary:        Measurement tool for TCP/UDP bandwidth performance
 
 License:        BSD
@@ -10,6 +10,7 @@ Patch0000:	0000-cve-2023-38403.patch
 Patch0001:	0001-cve-2023-7250.patch
 Patch0002:	0002-cve-2024-26306.patch
 Patch0003:	0003-cve-2024-53580.patch
+Patch0004:	0004-cve-2025-54349.patch
 
 BuildRequires:  libuuid-devel
 BuildRequires:  gcc
@@ -57,6 +58,9 @@ rm -f %{buildroot}%{_libdir}/libiperf.la
 %{_libdir}/*.so
 
 %changelog
+* Wed Jan 21 2026 Michal Ruprich <michalruprich@gmail.com> - 3.9-14.1
+- Resolves: RHEL-136181 - iperf Heap Buffer Overflow (CVE-2025-54349)
+
 * Thu Jan 09 2025 Michal Ruprich <mruprich@redhat.com> - 3.9-14
 - Resolves: RHEL-72933 - Denial of Service in iperf Due to Improper JSON Handling
 
