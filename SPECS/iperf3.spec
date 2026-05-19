@@ -1,6 +1,6 @@
 Name:           iperf3
 Version:        3.17.1
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Measurement tool for TCP/UDP bandwidth performance
 
 License:        BSD-3-Clause-LBNL AND MIT AND dtoa AND BSD-3-Clause AND NCSA AND LicenseRef-Fedora-Public-Domain
@@ -17,6 +17,7 @@ BuildRequires:  git-core
 Patch0000:    1278-rebase.patch
 Patch0001:    0001-cve-2024-53580.patch
 Patch0002:    0002-cve-2025-54349.patch
+Patch0003:    0003-openssl-authentication.patch
 
 %description
 Iperf is a tool to measure maximum TCP bandwidth, allowing the tuning of
@@ -58,6 +59,9 @@ rm -f %{buildroot}%{_libdir}/libiperf.la
 %{_libdir}/*.so
 
 %changelog
+* Mon Apr 13 2026 Michal Ruprich <mruprich@redhat.com> - 3.17.1-6
+- Resolves: RHEL-151876 - authentication no longer works with the new openssl
+
 * Tue Jan 20 2026 Michal Ruprich <mruprich@redhat.com> - 3.17.1-5
 - Resolves: RHEL-136170 - iperf Heap Buffer Overflow (CVE-2025-54349)
 
