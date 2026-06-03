@@ -1,6 +1,6 @@
 Name:           iperf3
 Version:        3.9
-Release:        16%{?dist}
+Release:        17%{?dist}
 Summary:        Measurement tool for TCP/UDP bandwidth performance
 
 License:        BSD
@@ -12,6 +12,7 @@ Patch0002:	0002-cve-2024-26306.patch
 Patch0003:	0003-cve-2024-53580.patch
 Patch0004:	0004-cve-2025-54349.patch
 Patch0005:	0005-logfile-image-mode.patch
+Patch0006:	0006-openssl-authentication.patch
 
 BuildRequires:  libuuid-devel
 BuildRequires:  gcc
@@ -59,6 +60,9 @@ rm -f %{buildroot}%{_libdir}/libiperf.la
 %{_libdir}/*.so
 
 %changelog
+* Mon Apr 13 2026 Michal Ruprich <mruprich@redhat.com> - 3.9-17
+- Resolves: RHEL-151875 - authentication no longer works with the new openssl
+
 * Tue Jan 20 2026 Michal Ruprich <mruprich@redhat.com> - 3.9-16
 - Resolves: RHEL-132941 - iperf3 broken once "--logfile" is specified on server side
 
