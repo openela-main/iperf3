@@ -1,6 +1,6 @@
 Name:           iperf3
 Version:        3.5
-Release:        12%{?dist}
+Release:        12%{?dist}.1
 Summary:        Measurement tool for TCP/UDP bandwidth performance
 
 Group:          Applications/Internet
@@ -18,6 +18,8 @@ Patch0005:	0005-cve-2023-7250.patch
 Patch0006:	0006-cve-2024-26306.patch
 Patch0007:	0007-cve-2024-53580.patch
 Patch0008:	0008-cve-2025-54349.patch
+# https://github.com/esnet/iperf/commit/494dd377eca4689672becdf06a85158557db1586
+Patch0009:	0009-cve-2026-71217.patch
 
 %description
 Iperf is a tool to measure maximum TCP bandwidth, allowing the tuning of
@@ -65,6 +67,10 @@ rm -f %{buildroot}%{_libdir}/libiperf.la
 %{_libdir}/*.so
 
 %changelog
+* Wed Aug 12 2026 RHEL Packaging Agent <redhat-ymir-agent@redhat.com> - 3.5-12.1
+- Resolves: RHEL-236174 - Add JSON value checks for get_parameters
+  (CVE-2026-71217)
+
 * Fri Jan 23 2026 Michal Ruprich <mruprich@redhat.com> - 3.5-12
 - Resolves: RHEL-136175 - iperf Heap Buffer Overflow (CVE-2025-54349)
 
