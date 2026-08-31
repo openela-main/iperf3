@@ -1,6 +1,6 @@
 Name:           iperf3
 Version:        3.9
-Release:        17%{?dist}
+Release:        17%{?dist}.1
 Summary:        Measurement tool for TCP/UDP bandwidth performance
 
 License:        BSD
@@ -13,6 +13,8 @@ Patch0003:	0003-cve-2024-53580.patch
 Patch0004:	0004-cve-2025-54349.patch
 Patch0005:	0005-logfile-image-mode.patch
 Patch0006:	0006-openssl-authentication.patch
+# https://github.com/esnet/iperf/commit/494dd377eca4689672becdf06a85158557db1586
+Patch0007:	0007-cve-2026-71217.patch
 
 BuildRequires:  libuuid-devel
 BuildRequires:  gcc
@@ -60,6 +62,10 @@ rm -f %{buildroot}%{_libdir}/libiperf.la
 %{_libdir}/*.so
 
 %changelog
+* Thu Aug 13 2026 RHEL Packaging Agent <redhat-ymir-agent@redhat.com> - 3.9-17.1
+- Resolves: RHEL-236176 - Add JSON value checks for get_parameters
+  (CVE-2026-71217)
+
 * Mon Apr 13 2026 Michal Ruprich <mruprich@redhat.com> - 3.9-17
 - Resolves: RHEL-151875 - authentication no longer works with the new openssl
 
