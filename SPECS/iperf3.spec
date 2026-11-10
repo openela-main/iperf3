@@ -1,6 +1,6 @@
 Name:           iperf3
-Version:        3.17.1
-Release:        6%{?dist}.2
+Version:        3.21
+Release:        2%{?dist}
 Summary:        Measurement tool for TCP/UDP bandwidth performance
 
 License:        BSD-3-Clause-LBNL AND MIT AND dtoa AND BSD-3-Clause AND NCSA AND LicenseRef-Fedora-Public-Domain
@@ -14,15 +14,7 @@ BuildRequires:  openssl-devel
 BuildRequires:  make
 BuildRequires:  git-core
 
-Patch0000:    1278-rebase.patch
-Patch0001:    0001-cve-2024-53580.patch
-Patch0002:    0002-cve-2025-54349.patch
-Patch0003:    0003-openssl-authentication.patch
-# https://github.com/esnet/iperf/commit/494dd377eca4689672becdf06a85158557db1586
-# https://github.com/esnet/iperf/commit/369ad0c460c1b84bdaf6bb33f8ce32caeae063d7
-Patch0004:    0004-cve-2026-71217.patch
-# https://github.com/esnet/iperf/commit/a25378f8cbbaa7b3db5674ca3dcc19658ae65da3
-Patch0005:    0005-cve-2026-102253.patch
+Patch0001:    0004-cve-2026-71217.patch
 
 %description
 Iperf is a tool to measure maximum TCP bandwidth, allowing the tuning of
@@ -64,14 +56,15 @@ rm -f %{buildroot}%{_libdir}/libiperf.la
 %{_libdir}/*.so
 
 %changelog
-* Tue Sep 29 2026 RHEL Packaging Agent <redhat-ymir-agent@redhat.com> - 3.17.1-6.2
-- DoS via UDP receive worker infinite loop (CVE-2026-102253)
-- Resolves: RHEL-273152
-
-* Wed Aug 12 2026 RHEL Packaging Agent <redhat-ymir-agent@redhat.com> - 3.17.1-6.1
+* Mon Aug 17 2026 Michal Ruprich <mruprich@redhat.com> - 3.21-2
 - Fix JSON value bounds checks in get_parameters and
   iperf_parse_arguments (CVE-2026-71217)
-- Resolves: RHEL-236170
+- Resolves: RHEL-236258
+
+* Fri Jul 03 2026 Michal Ruprich <mruprich@redhat.com> - 3.21-1
+- Rebase to version 3.21
+- Resolves: RHEL-173619
+- Resolves: RHEL-125978 - high CPU usage
 
 * Mon Apr 13 2026 Michal Ruprich <mruprich@redhat.com> - 3.17.1-6
 - Resolves: RHEL-151876 - authentication no longer works with the new openssl
