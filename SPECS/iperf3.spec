@@ -1,6 +1,6 @@
 Name:           iperf3
 Version:        3.21
-Release:        2%{?dist}
+Release:        2%{?dist}.1
 Summary:        Measurement tool for TCP/UDP bandwidth performance
 
 License:        BSD-3-Clause-LBNL AND MIT AND dtoa AND BSD-3-Clause AND NCSA AND LicenseRef-Fedora-Public-Domain
@@ -15,6 +15,8 @@ BuildRequires:  make
 BuildRequires:  git-core
 
 Patch0001:    0004-cve-2026-71217.patch
+# https://github.com/esnet/iperf/commit/a25378f8cbbaa7b3db5674ca3dcc19658ae65da3
+Patch0002:    0005-cve-2026-102253.patch
 
 %description
 Iperf is a tool to measure maximum TCP bandwidth, allowing the tuning of
@@ -56,6 +58,10 @@ rm -f %{buildroot}%{_libdir}/libiperf.la
 %{_libdir}/*.so
 
 %changelog
+* Tue Sep 29 2026 RHEL Packaging Agent <redhat-ymir-agent@redhat.com> - 3.21-2.1
+- DoS via UDP receive worker infinite loop (CVE-2026-102253)
+- Resolves: RHEL-273153
+
 * Mon Aug 17 2026 Michal Ruprich <mruprich@redhat.com> - 3.21-2
 - Fix JSON value bounds checks in get_parameters and
   iperf_parse_arguments (CVE-2026-71217)
